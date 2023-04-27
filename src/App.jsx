@@ -16,6 +16,7 @@ import ViewCategory from "./components/admin/category/ViewCategory";
 import EditCategory from "./components/admin/category/EditCategory";
 import AddProduct from "./components/admin/products/AddProduct";
 import ViewProduct from "./components/admin/products/ViewProduct";
+import EditProduct from "./components/admin/products/EditProduct";
 
 axios.defaults.baseURL = "http://localhost:8000/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -46,6 +47,7 @@ function App() {
           <Route path="view-category/edit-category/:id" element={<EditCategory/>} />
           <Route path="add-product" element={<AddProduct/>} />
           <Route path="view-product" element={<ViewProduct/>} />
+          <Route path="view-product/edit-product/:id" element={<EditProduct/>} />
         </Route>
       </Routes>
     </div>

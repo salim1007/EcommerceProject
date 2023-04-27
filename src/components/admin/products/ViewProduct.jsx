@@ -21,19 +21,30 @@ useEffect(()=>{
 
 var display_ProductData = "";
 
+
 if(loading){
   return <h4> View Products Loading...</h4>
 }else{
+  var ProdStatus = "";
  display_ProductData = viewProduct.map((item)=>{
+  if(item.status == '0'){
+      ProdStatus = 'Shown';
+  }else if(item.status== '1'){
+    ProdStatus = 'Hidden';
+  }
     return (
       <tr key={item.id}>
         <td>{item.id}</td>
-        <td>{item.category.name}</td>
+        <td>{item.category_id}</td>
         <td>{item.name}</td>
         <td>{item.selling_price}</td>
         <td><img src={`http://localhost:8000/${item.image}`} width="50px" alt={item.name}/></td>
-        <td><Link to="edit-product" className='btn btn-success btn-sm'>Edit</Link></td>
-        <td><button  className='btn btn-danger btn-sm'>Delete</button></td>
+        <td>
+          <Link to={`edit-product/${item.id}`} className='btn btn-success btn-sm'>Edit</Link>
+        </td>
+        <td>
+          {ProdStatus}
+        </td>
       </tr>
     )
   })
@@ -58,7 +69,7 @@ if(loading){
                 <th>Selling Price</th>
                 <th>Image</th>
                 <th>Edit</th>
-                <th>Delete</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>

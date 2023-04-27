@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 
-const AddProduct = () => {
+const EditProduct = () => {
+  let {id} = useParams();
+  const navigate = useNavigate();
   const [categorylist, setCategoryList] = useState([]);
+  const [loading, setLoading]= useState(true);
   const [productInput, setProduct] = useState({
     category_id: "",
     slug: "",
@@ -19,9 +22,7 @@ const AddProduct = () => {
     original_price: "",
     qty: "",
     brand: "",
-    featured: "",
-    popular: "",
-    status: "",
+   
   });
 
   const [picture, setPicture] = useState([]);
@@ -33,15 +34,40 @@ const AddProduct = () => {
   const handleImage = (e) => {
     setPicture({ image: e.target.files[0] });
   };
+
+ const [allcheckbox, setCheckboxes] = useState([]);
+  const handleCheckbox = (e)=>{
+    e.persist();
+    setCheckboxes({ ...allcheckbox, [e.target.name]: e.target.checked });
+  }
+
   useEffect(() => {
     axios.get(`/api/all-category`).then((res) => {
       if (res.data.status === 200) {
         setCategoryList(res.data.category);
       }
     });
+
+    axios.get(`/api/edit-product/`+ id).then(res=>{
+      if(res.data.status === 200){
+        setProduct(res.data.product);
+        setCheckboxes(res.data.product);
+
+      }else if(res.data.status === 404){
+        swal("Error", res.data.message, "error");
+        navigate("/admin/view-product");
+      }
+      setLoading(false);
+    })
+
   }, []);
 
-  const submitProduct = (e) => {
+  if(loading){
+    return <h4>Edit Product Data Loading...</h4>
+  }
+
+
+  const updateProduct = (e) => {
     e.preventDefault();
 
     const formData = new FormData();
@@ -60,36 +86,21 @@ const AddProduct = () => {
     formData.append("original_price", productInput.original_price);
     formData.append("qty", productInput.qty);
     formData.append("brand", productInput.brand);
-    formData.append("featured", productInput.featured);
-    formData.append("popular", productInput.popular);
-    formData.append("status", productInput.status);
+    formData.append("featured", allcheckbox.featured ? '1': '0');
+    formData.append("popular", allcheckbox.popular ? '1': '0');
+    formData.append("status", allcheckbox.status ? '1': '0');
 
-    axios.post(`/api/store-product`, formData).then((res) => {
+    axios.post(`/api/update-product/` + id, formData).then((res) => {
       if (res.data.status === 200) {
         swal("Success", res.data.message, "success");
-        setProduct({...productInput,
-          category_id: "",
-          slug: "",
-          name: "",
-          description: "",
+        console.log(allcheckbox);
 
-          meta_title: "",
-          meta_keyword: "",
-          meta_descrip: "",
-
-          selling_price: "",
-          original_price: "",
-          qty: "",
-          brand: "",
-          featured: "",
-          popular: "",
-          status: "",
-        });
-
-        setPicture("");
 
       } else if (res.data.status === 422) {
         swal("All fields are mandatory", "", "error");
+      }else if(res.data.status === 404){
+        swal("Error", res.data.message);
+        navigate("/admin/view-product");
       }
     });
   };
@@ -99,17 +110,17 @@ const AddProduct = () => {
       <div className="card mt-4">
         <div className="card-header">
           <h4>
-            Add Product
+              Edit Product
             <Link
               to="/admin/view-product"
               className="btn btn-primary btn-sm float-end"
             >
-              View Product
+              Back
             </Link>
           </h4>
         </div>
         <div className="card-body">
-          <form onSubmit={submitProduct} encType="multipart/form-data">
+          <form onSubmit={updateProduct} encType="multipart/form-data">
             <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
               <li className="nav-item" role="presentation">
                 <button
@@ -308,12 +319,13 @@ const AddProduct = () => {
                       className="form-control"
                       onChange={handleImage}
                     />
+                    <img src={`http://localhost:8000/${productInput.image}`} width="50px" />
                   </div>
                   <div className="col-md-4 form-group mb-3">
                     <label>Featured (checked=shown)</label>
                     <input
-                      onChange={handleInput}
-                      value={productInput.featured}
+                      onChange={handleCheckbox}
+                      defaultChecked={allcheckbox.featured === 1? true: false}
                       type="checkbox"
                       name="featured"
                       className="w-50 h-50"
@@ -323,8 +335,8 @@ const AddProduct = () => {
                     <label>Popular (checked=shown)</label>
                     <input
                       type="checkbox"
-                      onChange={handleInput}
-                      value={productInput.popular}
+                      onChange={handleCheckbox}
+                      defaultChecked={allcheckbox.popular === 1? true: false}
                       name="popular"
                       className="w-50 h-50"
                     />
@@ -333,8 +345,8 @@ const AddProduct = () => {
                     <label>Status (checked=Hidden)</label>
                     <input
                       type="checkbox"
-                      onChange={handleInput}
-                      value={productInput.status}
+                      onChange={handleCheckbox}
+                      defaultChecked={allcheckbox.status === 1? true: false}
                       name="status"
                       className="w-50 h-50"
                     />
@@ -343,7 +355,7 @@ const AddProduct = () => {
               </div>
             </div>
             <button type="submit" className="btn btn-primary px-4">
-              Submit
+              Update
             </button>
           </form>
         </div>
@@ -352,4 +364,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;
