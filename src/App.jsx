@@ -18,6 +18,11 @@ import AddProduct from "./components/admin/products/AddProduct";
 import ViewProduct from "./components/admin/products/ViewProduct";
 import EditProduct from "./components/admin/products/EditProduct";
 
+import ViewCollections from "./layouts/frontend/collections/ViewCollections";
+import ViewProductColl from "./layouts/frontend/collections/ViewProductColl";
+import ProductDetail from "./layouts/frontend/collections/ProductDetail";
+
+
 axios.defaults.baseURL = "http://localhost:8000/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.post["Accept"] = "application/json";
@@ -38,6 +43,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/footer" element={<Footer/>} />
         <Route path="/register" element={<Register />} />
+        <Route path="/collections" element={<ViewCollections/>}/>
+        <Route path="/collections/:slug" element={<ViewProductColl/>}/>
+        <Route path="/collections/:category/:product" element={<ProductDetail/>}/>
         <Route path="/home" element={<Home />} />
         <Route path="/admin" element={<MasterLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
