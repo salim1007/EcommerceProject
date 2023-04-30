@@ -8,6 +8,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [products, setProduct] = useState([]);
+  const [quantity, setQuantity] = useState(0);
 
   let { category, product } = useParams();
 
@@ -33,6 +34,45 @@ const ProductDetail = () => {
     };
   }, []);
 
+  const handleIncrement = ()=>{
+    if( quantity < 10){
+      setQuantity(prevCount => prevCount + 1);
+    }
+    
+  }
+  const handleDecrement = ()=>{
+    if( quantity > 1){
+      setQuantity(prevCount => prevCount - 1);
+    }
+   
+  }
+
+  const submitAddToCart = (e)=>{
+    e.preventDefault();
+
+    const data = {
+      product_id: products.id,
+      product_qty:quantity,
+    }
+
+    axios.post(`/api/add-to-cart`, data).then(res => {
+      if(res.data.status === 201){
+        swal("Success", res.data.message,"success");
+      
+      }
+        //Already Added To Cart...
+      else if(res.data.status === 409){
+        swal("Success", res.data.message,"success");
+      }
+      else if(res.data.status === 401){
+        swal("Error", res.data.message,"error");
+      }
+      else if(res.data.status === 404){
+        swal("Error", res.data.message,"error");
+      }
+    });
+  }
+
   if (loading) {
     return <h4>Loding Product Detail...</h4>;
   } else {
@@ -45,17 +85,17 @@ const ProductDetail = () => {
           <div className="row">
             <div className="col-md-3 mt-3">
               <div className="input-group">
-                <button type="button" className="input-group-text">
+                <button type="button" onClick={handleDecrement} className="input-group-text">
                   -
                 </button>
-                <input type="text" className="form-control text-center" />
-                <button type="button" className="input-group-text">
+                <div  className="form-control text-center">{quantity}</div>
+                <button type="button" onClick={handleIncrement} className="input-group-text">
                   +
                 </button>
               </div>
             </div>
             <div className="col-md-3 mt-3">
-              <button type="button" className="btn btn-primary w-100 ">
+              <button onClick={submitAddToCart} type="button" className="btn btn-primary w-100 ">
                 Add to Cart
               </button>
             </div>

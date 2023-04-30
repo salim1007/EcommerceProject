@@ -30,7 +30,9 @@ const ViewCollections = () => {
   if (loading) {
     return <h4>Loding Categories...</h4>;
   } else {
+
     var showCategoryList = "";
+    
     showCategoryList = category.map((item) => {
       return (
         <div className="col-md-4" key={item.id}>
