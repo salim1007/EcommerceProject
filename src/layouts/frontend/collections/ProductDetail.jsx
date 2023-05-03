@@ -53,6 +53,7 @@ const ProductDetail = () => {
     const data = {
       product_id: products.id,
       product_qty:quantity,
+      product_name:products.name,
     }
 
     axios.post(`/api/add-to-cart`, data).then(res => {

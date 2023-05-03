@@ -21,6 +21,7 @@ import EditProduct from "./components/admin/products/EditProduct";
 import ViewCollections from "./layouts/frontend/collections/ViewCollections";
 import ViewProductColl from "./layouts/frontend/collections/ViewProductColl";
 import ProductDetail from "./layouts/frontend/collections/ProductDetail";
+import Cart from "./layouts/frontend/Cart";
 
 
 axios.defaults.baseURL = "http://localhost:8000/";
@@ -44,6 +45,7 @@ function App() {
         <Route path="/footer" element={<Footer/>} />
         <Route path="/register" element={<Register />} />
         <Route path="/collections" element={<ViewCollections/>}/>
+        <Route path="/cart"  element={<Cart/>}/>
         <Route path="/collections/:slug" element={<ViewProductColl/>}/>
         <Route path="/collections/:category/:product" element={<ProductDetail/>}/>
         <Route path="/home" element={<Home />} />

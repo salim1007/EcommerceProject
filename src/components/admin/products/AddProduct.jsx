@@ -178,7 +178,7 @@ const AddProduct = () => {
                       <option>Select Category</option>
                       {categorylist.map((item) => {
                         return (
-                          <option value={item.name} key={item.id}>
+                          <option value={item.id} key={item.id}>
                             {item.name}
                           </option>
                         );

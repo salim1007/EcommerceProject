@@ -28,7 +28,7 @@ const ViewCollections = () => {
   }, []);
 
   if (loading) {
-    return <h4>Loding Categories...</h4>;
+    return <h4>Loading Categories...</h4>;
   } else {
 
     var showCategoryList = "";

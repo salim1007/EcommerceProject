@@ -9,7 +9,7 @@ const ViewProductColl = () => {
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState([]);
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState([]);
   let { slug } = useParams();
 
   const productCount = product.length;
@@ -38,7 +38,7 @@ const ViewProductColl = () => {
   }, []);
 
   if (loading) {
-    return <h4>Loding Products...</h4>;
+    return <h4>Loading Products...</h4>;
   } else {
     var showProductList = "";
 
