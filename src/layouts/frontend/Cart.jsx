@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams} from "react-router-dom";
+import { Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 import Navbar from "./Navbar";
@@ -9,7 +9,10 @@ const Cart = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
 
-    let {cart_id , scope} = useParams();
+  
+
+    var totalCartPrice = 0;
+    var totalCartPriceFx = 0;
 
 
     useEffect(() => {
@@ -100,6 +103,8 @@ const Cart = () => {
               </thead>
               <tbody>
               {  viewCart = cart.map((item)=>{
+                totalCartPrice += item.product_qty;
+                totalCartPriceFx += item.product_qty;
                     return (
 
                     <tr key={item.id}>
@@ -151,6 +156,23 @@ const Cart = () => {
           <div className="row">
             <div className="col-md-12">
              {viewCart}
+            </div>
+
+            <div className="col-md-8"></div>
+            <div className="col-md-4">
+              <div className="card card-body mt-3">
+                <h4>Sub Total:
+                  <span className="float-end">{totalCartPrice}</span>
+
+                </h4>
+                <h4>Grand Total:
+                  <span className="float-end">{totalCartPriceFx - 1}</span>
+
+                </h4>
+                <hr/>
+                <Link to="/checkout" className="btn btn-primary" >Checkout</Link>
+
+              </div>
             </div>
           </div>
         </div>
